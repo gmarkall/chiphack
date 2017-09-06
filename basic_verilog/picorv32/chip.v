@@ -125,7 +125,6 @@ module chip (
         if (mem_wstrb[1]) memory[mem_addr + 1] <= mem_wdata[15: 8];
         if (mem_wstrb[2]) memory[mem_addr + 2] <= mem_wdata[23:16];
         if (mem_wstrb[3]) memory[mem_addr + 3] <= mem_wdata[31:24];
-      end
     end
   end
 
