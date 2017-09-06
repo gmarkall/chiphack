@@ -33,6 +33,13 @@ button: ./button/chip.v ./button/button.v blackice.pcf
 		arachne-pnr -d 8k -P tq144:4k -p blackice.pcf chip.blif -o chip.txt
 		icepack chip.txt chip.bin
 
+.PHONY: picorv32
+picorv32: ./picorv32/chip.v ./picorv32/picorv32.v blackice.pcf
+		yosys -q -p "synth_ice40 -blif chip.blif" ./picorv32/chip.v ./picorv32/picorv32.v
+		arachne-pnr -d 8k -P tq144:4k -p blackice.pcf chip.blif -o chip.txt
+		icepack chip.txt chip.bin
+
+
 .PHONY: fibonacci
 fibonacci: ./fibonacci/chip.v ./fibonacci/fibonacci.v blackice.pcf
 		yosys -q -p "synth_ice40 -blif chip.blif" ./fibonacci/chip.v ./fibonacci/fibonacci.v

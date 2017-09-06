@@ -133,7 +133,12 @@ module picorv32 #(
 
 	// Trace Interface
 	output reg        trace_valid,
-	output reg [35:0] trace_data
+	output reg [35:0] trace_data,
+
+        // Mystorm leds
+        output reg led4,
+        output reg led3
+
 );
 	localparam integer irq_timer = 0;
 	localparam integer irq_ebreak = 1;
@@ -332,6 +337,11 @@ module picorv32 #(
 		assign pcpi_div_wait = 0;
 		assign pcpi_div_ready = 0;
 	end endgenerate
+
+        // This works, shows that the core is there.
+        //assign led = 1;
+        // The LED eventually lights, so reset is working.
+        //assign led = resetn;
 
 	always @* begin
 		pcpi_int_wr = 0;
@@ -555,6 +565,8 @@ module picorv32 #(
 	end
 
 	always @(posedge clk) begin
+                // This light the led eventually.
+                led4 <= resetn;
 		if (resetn && !trap) begin
 			if (mem_do_prefetch || mem_do_rinst || mem_do_rdata)
 				`assert(!mem_do_wdata);
@@ -797,6 +809,9 @@ module picorv32 #(
 			dbg_valid_insn <= 0;
 		else if (launch_next_insn)
 			dbg_valid_insn <= 1;
+
+                // Does not work at the moment
+                if (instr_xori) led3 <= ~led3;
 
 		if (decoder_trigger_q) begin
 			cached_ascii_instr <= new_ascii_instr;
@@ -1069,6 +1084,8 @@ module picorv32 #(
 			instr_slti  <= is_alu_reg_imm && mem_rdata_q[14:12] == 3'b010;
 			instr_sltiu <= is_alu_reg_imm && mem_rdata_q[14:12] == 3'b011;
 			instr_xori  <= is_alu_reg_imm && mem_rdata_q[14:12] == 3'b100;
+			//if (is_alu_reg_imm && mem_rdata_q[14:12] == 3'b100) led <= ~led;
+                        //led         <= is_alu_reg_imm && mem_rdata_q[14:12] == 3'b100;
 			instr_ori   <= is_alu_reg_imm && mem_rdata_q[14:12] == 3'b110;
 			instr_andi  <= is_alu_reg_imm && mem_rdata_q[14:12] == 3'b111;
 
