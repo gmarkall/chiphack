@@ -93,7 +93,7 @@ module chip (
     //  000187b7 lui     a5,0x18
     memory[0] <=  'hb7;
     memory[1] <=  'h87;
-    memory[2] <=  'h01;
+    memory[2] <=  'h00;
     memory[3] <=  'h00;
 
     // 6a078793 addi    a5,a5,1696
