@@ -812,6 +812,7 @@ module picorv32 #(
 
                 // Does not work at the moment
                 if (instr_xori) led3 <= ~led3;
+                //led3 <= cpuregs[9][0];
 
 		if (decoder_trigger_q) begin
 			cached_ascii_instr <= new_ascii_instr;

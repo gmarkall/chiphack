@@ -25,10 +25,6 @@ module chip (
   assign PMOD[52:12] = {39{1'b0}};
   assign PMOD[10:00] = {11{1'b0}};
 
-  // Slow the clock to 10mhz
-  //reg slow_clk = 0;
-  //always #10 slow_clk = ~slow_clk;
-
   // From testbench...
 
   reg resetn = 0;
@@ -36,7 +32,7 @@ module chip (
   wire trap;
 
   always @(posedge slow_clk) begin
-    if (resetn_cnt < 10000000000)
+    if (resetn_cnt < 100000)
       resetn_cnt <= resetn_cnt + 1;
     else
       resetn <= 1;
@@ -91,44 +87,56 @@ module chip (
     .led3         (PMOD[54]   )
   );
 
-  reg [7:0] memory [0:23];
+  reg [7:0] memory [0:31];
 
   initial begin
-    // li      s1,0
-    memory[0] <=  'h93;
-    memory[1] <=  'h04;
-    memory[2] <=  'h00;
+    //  000187b7 lui     a5,0x18
+    memory[0] <=  'hb7;
+    memory[1] <=  'h87;
+    memory[2] <=  'h01;
     memory[3] <=  'h00;
 
-    // addi    s1,s1,1
+    // 6a078793 addi    a5,a5,1696
     memory[4] <=  'h93;
-    memory[5] <=  'h84;
-    memory[6] <=  'h14;
-    memory[7] <=  'h00;
-
-    // bne     s1,a5,-4
-    memory[8] <=  'he3;
-    memory[9] <=  'h9e;
-    memory[10] <= 'hf4;
-    memory[11] <= 'hfe;
-
-    // not     s0,s0
-    memory[12] <= 'h13;
-    memory[13] <= 'h44;
-    memory[14] <= 'hf4;
-    memory[15] <= 'hfe;
+    memory[5] <=  'h87;
+    memory[6] <=  'h07;
+    memory[7] <=  'h6a;
 
     // li      s1,0
-    memory[16] <= 'h93;
-    memory[17] <= 'h04;
-    memory[18] <= 'h00;
-    memory[19] <= 'h00;
+    memory[8] <=  'h93;
+    memory[9] <=  'h04;
+    memory[10]<=  'h00;
+    memory[11] <= 'h00;
+
+    // addi    s1,s1,1
+    memory[12] <= 'h93;
+    memory[13] <= 'h84;
+    memory[14] <= 'h14;
+    memory[15] <= 'h00;
+
+    // bne     s1,a5,-4
+    memory[16] <= 'he3;
+    memory[17] <= 'h9e;
+    memory[18] <= 'hf4;
+    memory[19] <= 'hfe;
+
+    // not     s0,s0
+    memory[20] <= 'h13;
+    memory[21] <= 'h44;
+    memory[22] <= 'hf4;
+    memory[23] <= 'hfe;
+
+    // li      s1,0
+    memory[24] <= 'h93;
+    memory[25] <= 'h04;
+    memory[26] <= 'h00;
+    memory[27] <= 'h00;
 
     // j -16
-    memory[20] <= 'h6f;
-    memory[21] <= 'hf0;
-    memory[22] <= 'h1f;
-    memory[23] <= 'hff;
+    memory[28] <= 'h6f;
+    memory[29] <= 'hf0;
+    memory[30] <= 'h1f;
+    memory[31] <= 'hff;
   end
 
   assign mem_ready = x32[0] && mem_valid;
